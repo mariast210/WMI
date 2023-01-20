@@ -1,34 +1,53 @@
+import { DataGrid } from "@mui/x-data-grid";
+import * as React from "react";
 import data from "../honda_wmi.json";
-const HomePage = () => {
-  const keys = ["Name", "WMI", "Country", "CreatedOn", "VehicleType"];
 
-  const getRowsJsx = () => {
-    return data.map((d) => {
-      const wmi = d.WMI;
-      return (
-        <tr key={wmi}>
-          {keys.map((k) => (
-            <td key={`${wmi}-${k}`}>{d[k]}</td>
-          ))}
-        </tr>
-      );
-    });
-  };
+const HomePage = () => {
+  const columns = [
+    { field: "Id", headerName: "Id", flex: 1, filterable: false },
+    {
+      field: "Country",
+      headerName: "Country",
+      flex: 1,
+      type: "singleSelect",
+      valueOptions: ["United Kingdom", "Spain", "Brazil"],
+    },
+    {
+      field: "CreatedOn",
+      headerName: "Created On",
+      flex: 1,
+      filterable: false,
+    },
+    {
+      field: "DateAvailableToPublic",
+      headerName: "Date available to public",
+      flex: 1,
+      filterable: false,
+    },
+    { field: "Name", headerName: "Name", flex: 1, filterable: false },
+    {
+      field: "UpdatedOn",
+      headerName: "Updated on",
+      flex: 1,
+      filterable: false,
+    },
+    {
+      field: "VehicleType",
+      headerName: "Vehicle Type",
+      flex: 1,
+      filterable: false,
+    },
+    { field: "WMI", headerName: "WMI", flex: 1, filterable: false },
+  ];
 
   return (
-    <div className="App">
-      <header>WMI Data - Honda | Total: {data.length}</header>
-      <table>
-        <thead>
-          <tr>
-            `
-            {keys.map((k) => (
-              <th key={k}>{k}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>{getRowsJsx()}</tbody>
-      </table>
+    <div style={{ height: 800, width: "100%" }}>
+      <DataGrid
+        rows={data}
+        columns={columns}
+        getRowId={(row) => row.Id}
+        disableColumnSelector
+      />
     </div>
   );
 };
