@@ -1,12 +1,14 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import { filterModelToQuery, sortModelToQuery } from "../utils/queryUtils";
+import Box from "@mui/material/Box";
 
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_OPTIONS = [10, 25, 100];
 
 export const Table = ({ getDataFunc, columns, searchColumns, defaultSort }) => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [rowsCount, setRowsCount] = useState(0);
   const [page, setPage] = useState(DEFAULT_PAGE);
@@ -19,10 +21,15 @@ export const Table = ({ getDataFunc, columns, searchColumns, defaultSort }) => {
 
   useEffect(() => {
     (async () => {
-      const response = await getDataFunc(query);
-      if (response.data) {
-        setData(response.data.data);
-        setRowsCount(response.data.totalCount);
+      try {
+        setLoading(true);
+        const response = await getDataFunc(query);
+        if (response.data) {
+          setData(response.data.data);
+          setRowsCount(response.data.totalCount);
+        }
+      } finally {
+        setLoading(false);
       }
     })();
   }, [query, getDataFunc]);
@@ -56,8 +63,17 @@ export const Table = ({ getDataFunc, columns, searchColumns, defaultSort }) => {
   };
 
   return (
-    <div style={{ height: 800, width: "100%" }}>
+    <Box style={{ padding: 20 }}>
       <DataGrid
+        sx={{
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "#1976d2",
+            color: "white",
+            fontSize: 16,
+          },
+        }}
+        autoHeight
+        {...data}
         rows={data}
         rowCount={rowsCount}
         columns={columns}
@@ -67,7 +83,7 @@ export const Table = ({ getDataFunc, columns, searchColumns, defaultSort }) => {
         onSortModelChange={handleSortModelChange}
         onFilterModelChange={handleFilterModelChange}
         rowsPerPageOptions={DEFAULT_PAGE_OPTIONS}
-        //loading={true}
+        loading={loading}
         disableColumnSelector
         disableDensitySelector
         page={page}
@@ -82,6 +98,6 @@ export const Table = ({ getDataFunc, columns, searchColumns, defaultSort }) => {
           },
         }}
       />
-    </div>
+    </Box>
   );
 };

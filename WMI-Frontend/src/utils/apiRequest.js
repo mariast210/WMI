@@ -8,7 +8,6 @@ const errorHandler = (error) => {
   const statusCode = error.response?.status;
 
   if (statusCode && statusCode !== 401) {
-    //TODO use toast instead
     console.error(error);
   }
 
