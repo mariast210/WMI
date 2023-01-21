@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.OData;
 using WMI_Backend.Models;
+using WMI_Backend.Services;
 
 namespace WMI_Backend.Controllers
 {
@@ -12,16 +15,27 @@ namespace WMI_Backend.Controllers
     public class CountriesController : ControllerBase
 	{
         private readonly ILogger<CountriesController> _logger;
+        private readonly ICountriesService _countriesService;
 
-        public CountriesController(ILogger<CountriesController> logger)
+        public CountriesController(ILogger<CountriesController> logger, ICountriesService countriesService)
 		{
             _logger = logger;
+            _countriesService = countriesService;
 		}
 
         [HttpGet]
-        public IEnumerable<Country> Get()
+        public async Task<IActionResult> GetAll()
         {
-            return new List<Country>();
+            try
+            {
+                var countries = await _countriesService.GetAll();
+                return Ok(countries);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occured when getting list of countries: {message}", ex.Message);
+                return BadRequest(new Error(ex.Message));
+            }
         }
     }
 }

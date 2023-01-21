@@ -43,6 +43,8 @@ namespace WMI_Backend
             services.Configure<WmiDatabaseConfig>(Configuration.GetSection("WmiDatabase"));
 
             services.AddTransient<ICarsService, CarsService>();
+            services.AddTransient<ICountriesService, CountriesService>();
+
             services.AddSingleton<CarsRepository>();
         }
 

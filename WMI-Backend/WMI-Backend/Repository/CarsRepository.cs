@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WMI_Backend.Models;
 using System.Linq;
 using Microsoft.AspNetCore.OData.Query;
+using MongoDB.Bson;
 
 namespace WMI_Backend.Repository
 {
@@ -41,6 +42,12 @@ namespace WMI_Backend.Repository
                 return result.Count();
             }
             return default;
+        }
+
+        public async Task<List<string>> GetCountries()
+        {
+            var filter = new BsonDocument();
+            return await _carsCollection.Distinct<string>(nameof(Country), filter).ToListAsync();
         }
     }
 }
