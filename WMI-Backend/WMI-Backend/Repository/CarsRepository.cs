@@ -14,6 +14,11 @@ namespace WMI_Backend.Repository
     {
         private readonly IMongoCollection<Car> _carsCollection;
 
+        public CarsRepository()
+        {
+
+        }
+
         public CarsRepository(IOptions<WmiDatabaseConfig> wmiDatabaseConfig)
         {
             var mongoClient = new MongoClient(
@@ -26,7 +31,7 @@ namespace WMI_Backend.Repository
                 wmiDatabaseConfig.Value.BooksCollectionName);
         }
 
-        public List<Car> GetAll(ODataQueryOptions<Car> options)
+        public virtual List<Car> GetAll(ODataQueryOptions<Car> options)
         {
             var query = _carsCollection.AsQueryable();
             var result = (IQueryable<Car>)options.ApplyTo(query, new ODataQuerySettings()
@@ -37,7 +42,7 @@ namespace WMI_Backend.Repository
             return result.ToList();
         }
 
-        public long GetTotalCount(FilterQueryOption filter)
+        public virtual long GetTotalCount(FilterQueryOption filter)
         {
             if (filter != null)
             {
@@ -51,12 +56,12 @@ namespace WMI_Backend.Repository
             return GetTotalCount();
         }
 
-        public long GetTotalCount()
+        public virtual long GetTotalCount()
         {
             return _carsCollection.CountDocuments(new BsonDocument());
         }
 
-        public async Task<List<string>> GetCountries()
+        public virtual async Task<List<string>> GetCountries()
         {
             var filter = new BsonDocument();
             return await _carsCollection.Distinct<string>(nameof(Country), filter).ToListAsync();

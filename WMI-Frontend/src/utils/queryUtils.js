@@ -24,10 +24,11 @@ export const sortModelToQuery = (sortModel) => {
 export const filtersToQuery = (filterModel) => {
   const filters = [];
   filterModel?.items?.forEach((x) => {
-    if (x.value) {
-      filters.push(`${x.columnField} eq '${x.value}'`);
-    } else if (x.value === "Blank") {
+    console.log(x.value);
+    if (x.value === "Blank") {
       filters.push(`${x.columnField} eq null`);
+    } else if (x.value) {
+      filters.push(`${x.columnField} eq '${x.value}'`);
     }
   });
   return `${filters.join(" and ")}`;

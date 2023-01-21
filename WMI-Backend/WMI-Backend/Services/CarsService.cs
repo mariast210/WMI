@@ -28,4 +28,3 @@ namespace WMI_Backend.Services
         }
     }
 }
-
