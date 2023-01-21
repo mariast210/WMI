@@ -1,8 +1,11 @@
-import { DataGrid } from "@mui/x-data-grid";
-import * as React from "react";
+import { DataGrid, getGridSingleSelectOperators } from "@mui/x-data-grid";
+import { useState, useEffect } from "react";
 import data from "../honda_wmi.json";
+import { CountriesService } from "../services/CountriesService";
 
 const HomePage = () => {
+  const [countries, setCountries] = useState([]);
+
   const columns = [
     { field: "Id", headerName: "Id", flex: 1, filterable: false },
     {
@@ -10,7 +13,10 @@ const HomePage = () => {
       headerName: "Country",
       flex: 1,
       type: "singleSelect",
-      valueOptions: ["United Kingdom", "Spain", "Brazil"],
+      valueOptions: countries,
+      filterOperators: getGridSingleSelectOperators().filter(
+        (operator) => operator.value === "is"
+      ),
     },
     {
       field: "CreatedOn",
@@ -39,6 +45,17 @@ const HomePage = () => {
     },
     { field: "WMI", headerName: "WMI", flex: 1, filterable: false },
   ];
+
+  useEffect(() => {
+    handleGetCountries();
+  }, []);
+
+  const handleGetCountries = async () => {
+    const response = await CountriesService.getAll();
+    if (response.data) {
+      setCountries(response.data.map((x) => x.name));
+    }
+  };
 
   return (
     <div style={{ height: 800, width: "100%" }}>

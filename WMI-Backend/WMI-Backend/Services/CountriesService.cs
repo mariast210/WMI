@@ -19,7 +19,7 @@ namespace WMI_Backend.Services
         public async Task<List<Country>> GetAll()
         {
             var countries = await _carsRepository.GetCountries();
-            return countries.Select(x => new Country { Name = x }).ToList();
+            return countries.Select(x => new Country { Name = x ?? string.Empty }).ToList();
         }
     }
 }
