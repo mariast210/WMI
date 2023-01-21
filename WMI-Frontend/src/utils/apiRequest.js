@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const apiBaseUrl = process.env.REACT_APP_BASE_API_URL;
+
 export const apiRequest = axios.create({
-  baseURL: "https://localhost:5001/api",
+  baseURL: `${apiBaseUrl}/api`,
 });
 
 const errorHandler = (error) => {

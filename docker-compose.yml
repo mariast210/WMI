@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  db:
+    image: mongo:6.0.3
+    volumes:
+      - ./WMI-MongoData:/data/db
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=WMI
+  backend:
+    build: ./WMI-Backend/WMI-Backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Release
+      - WmiDatabase__ConnectionString=mongodb://db:27017
+    ports:
+      - "5001:80"
+    depends_on:
+      - db
+  frontend:
+    build: 
+      context: ./WMI-Frontend
+      args:
+        - REACT_APP_BASE_API_URL=http://localhost:5001
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend

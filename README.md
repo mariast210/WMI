@@ -1,28 +1,17 @@
 ## Scripts
 
-In the project directory, you can run:
+In the rppt directory, you can run:
 
-### `npm start`
+`docker-compose up -d`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This will:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+* download mongodb image, and start it up
+* build and start backend under `WMI-Backend/WMI-Backend` folder using `Dockerfile`
+* build and start frontend under `WMI-Frontend` folder using `Dockerfile`
 
-### `npm test`
-Runs a set of basic tests for the app.
+How to access services:
 
-## Tasks
-
-- [ ] Move `honda_wmi.json` file's content to a backend API written in C# & ASP.NET Core 3.1
-  - Data must be retrieved from the API and rendered instead of from the local browser
-  - A spinner or a `Loading...` text must appear while the request is in flight
-- [ ] Style `table` element that displays WMI table
-- [ ] Render data sorted by `CreatedOn` and then by `WMI`
-- [ ] Introduce a search box to accept user input, filter and render data
-- [ ] Introduce a `Select` control to group by country
-  - By default `View All` option must be selected, rendering all records
-  - Distinct countries must be available for user selection
-  - On selecting a country, data must be filtered down to just the country
-  - Search and Country selection must work together
+* API Swagger Doc is accessible via `http://localhost:5001/swagger`
+* Frontend is accessible via: `http://localhost:8080`
+* MonogDB is accessible via `27018` port.
