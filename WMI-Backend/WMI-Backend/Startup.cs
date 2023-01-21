@@ -6,10 +6,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
+using MongoDB.Driver;
+using WMI_Backend.Models;
+using WMI_Backend.Repository;
+using WMI_Backend.Services;
 
 namespace WMI_Backend
 {
@@ -25,7 +32,18 @@ namespace WMI_Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddOData(options => options
+                    .Filter()
+                    .SetMaxTop(100));
+
+            services.AddSwaggerGen();
+
+            services.Configure<WmiDatabaseConfig>(Configuration.GetSection("WmiDatabase"));
+
+            services.AddTransient<ICarsService, CarsService>();
+            services.AddSingleton<CarsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +53,8 @@ namespace WMI_Backend
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
