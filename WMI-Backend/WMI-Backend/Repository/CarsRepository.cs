@@ -33,7 +33,7 @@ namespace WMI_Backend.Repository
             return result.ToList();
         }
 
-        public int GetTotalCount(FilterQueryOption filter)
+        public long GetTotalCount(FilterQueryOption filter)
         {
             if (filter != null)
             {
@@ -41,13 +41,23 @@ namespace WMI_Backend.Repository
                 var result = (IQueryable<Car>)filter.ApplyTo(query, new ODataQuerySettings());
                 return result.Count();
             }
-            return default;
+            return GetTotalCount();
+        }
+
+        public long GetTotalCount()
+        {
+            return _carsCollection.CountDocuments(new BsonDocument());
         }
 
         public async Task<List<string>> GetCountries()
         {
             var filter = new BsonDocument();
             return await _carsCollection.Distinct<string>(nameof(Country), filter).ToListAsync();
+        }
+
+        public void InsertMany(List<Car> cars)
+        {
+            _carsCollection.InsertMany(cars);
         }
     }
 }

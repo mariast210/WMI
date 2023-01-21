@@ -5,7 +5,7 @@ namespace WMI_Backend.Models
 {
 	public class PageResult<T>
 	{
-		public int TotalCount { get; set; }
+		public long TotalCount { get; set; }
 		public List<T> Data { get; set; }
 	}
 }
