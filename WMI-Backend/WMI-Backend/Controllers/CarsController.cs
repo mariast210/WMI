@@ -35,9 +35,9 @@ namespace WMI_Backend.Controllers
                 var carsPageResult = _carsService.GetAll(options);
                 return Ok(carsPageResult);
             }
-            catch(ODataException ex)
+            catch(Exception ex)
             {
-                _logger.LogError("An error occured when running odata request: {message}", ex.Message);
+                _logger.LogError("An error occured when getting list of cars: {message}", ex.Message);
                 return BadRequest(new Error(ex.Message));
             }
         }

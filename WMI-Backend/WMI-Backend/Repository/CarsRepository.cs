@@ -10,8 +10,8 @@ using MongoDB.Bson;
 
 namespace WMI_Backend.Repository
 {
-	public class CarsRepository
-	{
+    public class CarsRepository
+    {
         private readonly IMongoCollection<Car> _carsCollection;
 
         public CarsRepository(IOptions<WmiDatabaseConfig> wmiDatabaseConfig)
@@ -29,7 +29,11 @@ namespace WMI_Backend.Repository
         public List<Car> GetAll(ODataQueryOptions<Car> options)
         {
             var query = _carsCollection.AsQueryable();
-            var result = (IQueryable<Car>)options.ApplyTo(query);
+            var result = (IQueryable<Car>)options.ApplyTo(query, new ODataQuerySettings()
+            {
+                HandleNullPropagation = HandleNullPropagationOption.False
+
+            });
             return result.ToList();
         }
 
@@ -38,7 +42,10 @@ namespace WMI_Backend.Repository
             if (filter != null)
             {
                 var query = _carsCollection.AsQueryable();
-                var result = (IQueryable<Car>)filter.ApplyTo(query, new ODataQuerySettings());
+                var result = (IQueryable<Car>)filter.ApplyTo(query, new ODataQuerySettings() {
+                    HandleNullPropagation = HandleNullPropagationOption.False
+
+                });
                 return result.Count();
             }
             return GetTotalCount();

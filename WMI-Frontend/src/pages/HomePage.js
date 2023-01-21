@@ -7,12 +7,29 @@ import { useState, useEffect } from "react";
 import { CarsService } from "../services/CarsService";
 import { CountriesService } from "../services/CountriesService";
 import dayjs from "dayjs";
+import { filterModelToQuery, sortModelToQuery } from "../utils/queryUtils";
+
+const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE = 0;
+const DEFAULT_PAGE_OPTIONS = [10, 25, 100];
+const DEFAULT_SORT = [
+  { field: "createdOn", sort: "asc" },
+  { field: "wmi", sort: "asc" },
+];
 
 const HomePage = () => {
   const [countries, setCountries] = useState([]);
   const [cars, setCars] = useState([]);
   const [rowsCount, setRowsCount] = useState(0);
-  const [filter, setFilter] = useState({});
+  const [page, setPage] = useState(DEFAULT_PAGE);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [query, setQuery] = useState({
+    top: DEFAULT_PAGE_SIZE,
+    skip: DEFAULT_PAGE,
+    orderBy: sortModelToQuery(DEFAULT_SORT),
+  });
+
+  const searchColumns = ["country", "name", "vehicleType", "wmi"];
 
   const columns = [
     { field: "id", headerName: "Id", flex: 1, filterable: false },
@@ -62,8 +79,11 @@ const HomePage = () => {
 
   useEffect(() => {
     handleGetCountries();
-    handleGetCars();
   }, []);
+
+  useEffect(() => {
+    handleGetCars();
+  }, [query]);
 
   const handleGetCountries = async () => {
     const response = await CountriesService.getAll();
@@ -73,7 +93,7 @@ const HomePage = () => {
   };
 
   const handleGetCars = async () => {
-    const response = await CarsService.getAll();
+    const response = await CarsService.getAll(query);
     if (response.data) {
       setCars(response.data.data);
       setRowsCount(response.data.totalCount);
@@ -81,20 +101,53 @@ const HomePage = () => {
   };
 
   const handleFilterModelChange = (filterModel) => {
-    setFilter({ filterModel: { ...filterModel } });
-    console.log(filterModel);
+    const filterQuery = filterModelToQuery(filterModel, searchColumns);
+    setQuery({ ...query, filter: filterQuery });
+    if (filterQuery) {
+      setQuery({ ...query, filter: filterQuery });
+    } else {
+      setQuery({ ...query, filter: null });
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    setQuery({ ...query, skip: newPage * pageSize });
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setQuery({ ...query, top: newPageSize });
+  };
+
+  const handleSortModelChange = (sortModel) => {
+    const sortQuery = sortModelToQuery(sortModel);
+    if (sortQuery) {
+      setQuery({ ...query, orderBy: sortModelToQuery(sortModel) });
+    } else {
+      setQuery({ ...query, orderBy: sortModelToQuery(DEFAULT_SORT) });
+    }
   };
 
   return (
     <div style={{ height: 800, width: "100%" }}>
       <DataGrid
         rows={cars}
+        rowCount={rowsCount}
         columns={columns}
         filterMode="server"
+        paginationMode="server"
+        sortingMode="server"
+        onSortModelChange={handleSortModelChange}
         onFilterModelChange={handleFilterModelChange}
+        rowsPerPageOptions={DEFAULT_PAGE_OPTIONS}
         //loading={true}
         disableColumnSelector
         disableDensitySelector
+        page={page}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
         components={{ Toolbar: GridToolbar }}
         componentsProps={{
           toolbar: {
