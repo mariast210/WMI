@@ -1,6 +1,6 @@
 ## Scripts
 
-In the rppt directory, you can run:
+In the root directory, you can run:
 
 `docker-compose up -d`
 
