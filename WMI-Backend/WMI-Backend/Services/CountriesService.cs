@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WMI_Backend.Models;
+using WMI_Backend.Models.Response;
 using WMI_Backend.Repository;
 
 namespace WMI_Backend.Services
@@ -16,10 +17,11 @@ namespace WMI_Backend.Services
             _carsRepository = carsRepository;
         }
 
-        public async Task<List<Country>> GetAll()
+        public async Task<List<CountryResponse>> GetAll()
         {
+            const string blankCountry = "Blank";
             var countries = await _carsRepository.GetCountries();
-            return countries.Select(x => new Country { Name = x ?? string.Empty }).ToList();
+            return countries.Select(x => new CountryResponse { Value = x ?? blankCountry, Label = x ?? blankCountry }).ToList();
         }
     }
 }

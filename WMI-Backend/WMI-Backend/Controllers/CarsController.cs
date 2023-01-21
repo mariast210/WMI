@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.AspNetCore.OData.Formatter;
 using WMI_Backend.Repository;
 using Microsoft.OData;
+using WMI_Backend.Models.Response;
 
 namespace WMI_Backend.Controllers
 {
@@ -27,7 +28,7 @@ namespace WMI_Backend.Controllers
         }
 
         [HttpGet]
-        public ActionResult<PageResult<Car>> GetAll(ODataQueryOptions<Car> options)
+        public ActionResult<PageResponse<Car>> GetAll(ODataQueryOptions<Car> options)
         {
             try
             {

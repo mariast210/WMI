@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using WMI_Backend.Models;
+using WMI_Backend.Models.Response;
 using WMI_Backend.Repository;
 
 namespace WMI_Backend.Services
@@ -19,11 +20,11 @@ namespace WMI_Backend.Services
             _carsRepository = carsRepository;
         }
 
-        public PageResult<Car> GetAll(ODataQueryOptions<Car> options)
+        public PageResponse<Car> GetAll(ODataQueryOptions<Car> options)
         {
             var data = _carsRepository.GetAll(options);
             var totalCount = _carsRepository.GetTotalCount(options.Filter);
-            return new PageResult<Car> { Data = data, TotalCount = totalCount };
+            return new PageResponse<Car> { Data = data, TotalCount = totalCount };
         }
     }
 }
