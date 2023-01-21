@@ -1,5 +1,4 @@
-﻿using System;
-namespace WMI_Backend.Models
+﻿namespace WMI_Backend.Models
 {
     public class WmiDatabaseConfig
     {

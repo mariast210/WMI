@@ -1,15 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using WMI_Backend.Models;
 using WMI_Backend.Services;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.OData.Query;
-using System.Linq;
-using Microsoft.AspNetCore.OData.Formatter;
-using WMI_Backend.Repository;
-using Microsoft.OData;
 using WMI_Backend.Models.Response;
 
 namespace WMI_Backend.Controllers

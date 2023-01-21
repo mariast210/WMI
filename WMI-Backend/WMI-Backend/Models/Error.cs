@@ -1,7 +1,6 @@
-﻿using System;
-namespace WMI_Backend.Models
+﻿namespace WMI_Backend.Models
 {
-	public class Error
+    public class Error
 	{
 		public string Message { get; set; }
 

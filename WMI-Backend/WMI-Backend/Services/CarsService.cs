@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.OData.Query;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.OData.Query;
 using WMI_Backend.Models;
 using WMI_Backend.Models.Response;
 using WMI_Backend.Repository;
